@@ -47,7 +47,7 @@ theme:
 nav:
   - 实验须知: index.md
   - 作业提交说明: ojguide.md
-  - 实验1：初识PYNQ及Xilinx工具链的使用:
+  - 实验1：神经网络加速器设计入门:
     - 实验概述: lab1/overview.md
     - 实验原理: lab1/theory.md
     - 实验步骤: lab1/step.md
@@ -71,7 +71,6 @@ nav:
     - 实验概述: lab4/overview.md
     - 实验原理: lab4/theory.md
     - 实验步骤: lab4/step.md
-    - 附加题: lab4/extra.md
     - 验收与提交: lab4/submit.md
   - Vivado下载链接: vivadodl.md
   
