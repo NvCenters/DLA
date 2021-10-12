@@ -12,8 +12,7 @@
 
 &emsp;&emsp;本实验要求实现网络卷积参数的量化与IP核的并行性优化，具体包括：
 
-&emsp;&emsp;1. 使用实验包提供的卷积、池化IP核，构建Block Design，并导出Overlay到PYNQ上运行Tiny  
-&emsp;&emsp;YOLOv2的目标检测算法；
+&emsp;&emsp;1. 运行量化前的Tiny YOLOv2，记录识别效果和运行时间；
 
 &emsp;&emsp;2. 将卷积层和全连接层的网络参数进行量化，在量化后再次运行Tiny YOLOv2算法，并对比和  
 &emsp;&emsp;分析量化前后网络参数的大小变化以及网络预测的准确度差异；
