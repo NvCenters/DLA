@@ -725,6 +725,47 @@
 &emsp;&emsp;预测准确度差异；</p>
 <p>&emsp;&emsp;（8）提交作业时，需将附加题的源程序文件和运行结果（卷积IP核的HLS源文件和头文件、<br />
 &emsp;&emsp;仿真源码文件、Tiny_YOLOv2_Quant.ipynb、output_quant_EXTRA.jpg）也一并提交。</p>
+<div class="admonition reference">
+<p class="admonition-title">Reference</p>
+<p>&emsp;&emsp;本题的参考结果如表3-1所示。</p>
+<p><center>表3-1 非对称量化参考结果</center></p>
+<p><center></p>
+<table>
+<thead>
+<tr>
+<th align="center">量化策略</th>
+<th align="center">数据类型</th>
+<th align="center">狗</th>
+<th align="center">自行车</th>
+<th align="center">小汽车</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">无</td>
+<td align="center">FP32</td>
+<td align="center">0.810</td>
+<td align="center">0.508</td>
+<td align="center">0.796</td>
+</tr>
+<tr>
+<td align="center">线性对称</td>
+<td align="center">INT8</td>
+<td align="center">0.745</td>
+<td align="center">0.422</td>
+<td align="center">0.731</td>
+</tr>
+<tr>
+<td align="center">线性非对称</td>
+<td align="center">IN8</td>
+<td align="center">0.830</td>
+<td align="center">0.566</td>
+<td align="center">0.827</td>
+</tr>
+</tbody>
+</table>
+<p></center></p>
+</div>
                 
               
               
