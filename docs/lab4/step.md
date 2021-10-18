@@ -6,7 +6,7 @@
 
 &emsp;&emsp;在理解脉动阵列结构及其工作机制的前提下，根据代码注释提示，完成`systolic_array.cpp`。
 
-!!! Attention
+!!! attention "请注意 :gun:"
     &emsp;&emsp;实验包的`systolic_array.cpp`包含有 **2个版本** 的脉动阵列，**一个是`Size-Limited version`，另一个则是`Size-Free version`**。前者最大只能支持2个$180 \times 180$矩阵的相乘，后者则通过矩阵分块实现了任意大小矩阵的相乘。
 
     &emsp;&emsp;实验时，应当尽可能完成`Size-Free version`的脉动阵列。如果只完成了`Size-Limited version`，则仅能得到基础的一小部分分数。
@@ -27,7 +27,7 @@
 
 &emsp;&emsp;点击进入`systolic_app`文件夹，运行`systolic_gemm.ipynb`以测试脉动阵列IP核的性能，记录下此时获得的加速比。
 
-!!! Attention
+!!! warning "请注意 :loudspeaker:"
     &emsp;&emsp;如果仅实现了`Size-Limited version`的脉动阵列，则测试时需要修改测试矩阵的行数和列数，使其不超过180。
 
 ## 4. HLS Directive优化

@@ -822,7 +822,7 @@
 <p>&emsp;&emsp;首先，利用实验包<code>systolic_hls</code>目录下的源文件，自行建立脉动阵列的Vivado HLS工程。</p>
 <p>&emsp;&emsp;在理解脉动阵列结构及其工作机制的前提下，根据代码注释提示，完成<code>systolic_array.cpp</code>。</p>
 <div class="admonition attention">
-<p class="admonition-title">Attention</p>
+<p class="admonition-title">请注意 <img alt="🔫" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f52b.svg" title=":gun:" /></p>
 <p>&emsp;&emsp;实验包的<code>systolic_array.cpp</code>包含有 <strong>2个版本</strong> 的脉动阵列，<strong>一个是<code>Size-Limited version</code>，另一个则是<code>Size-Free version</code></strong>。前者最大只能支持2个<script type="math/tex">180 \times 180</script>矩阵的相乘，后者则通过矩阵分块实现了任意大小矩阵的相乘。</p>
 <p>&emsp;&emsp;实验时，应当尽可能完成<code>Size-Free version</code>的脉动阵列。如果只完成了<code>Size-Limited version</code>，则仅能得到基础的一小部分分数。</p>
 </div>
@@ -834,8 +834,8 @@
 <h2 id="3-gemm">3. GEMM测试</h2>
 <p>&emsp;&emsp;将实验包中的<code>systolic_app.zip</code>上传到Jupyter并解压。</p>
 <p>&emsp;&emsp;点击进入<code>systolic_app</code>文件夹，运行<code>systolic_gemm.ipynb</code>以测试脉动阵列IP核的性能，记录下此时获得的加速比。</p>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
+<div class="admonition warning">
+<p class="admonition-title">请注意 <img alt="📢" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4e2.svg" title=":loudspeaker:" /></p>
 <p>&emsp;&emsp;如果仅实现了<code>Size-Limited version</code>的脉动阵列，则测试时需要修改测试矩阵的行数和列数，使其不超过180。</p>
 </div>
 <h2 id="4-hls-directive">4. HLS Directive优化</h2>

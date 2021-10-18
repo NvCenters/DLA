@@ -48,8 +48,8 @@
 
 &emsp;&emsp;综合成功后，可查看HLS生成的综合报告，必要时需要根据综合报告对IP核代码进行优化和改写。
 
-!!! Attention
-    在综合前，必须将`rnn.h`头文件中的`CSIM_ON`宏关闭。
+!!! warning "注意！！！ :loudspeaker:"
+    &emsp;&emsp;在综合前，必须将`rnn.h`头文件中的`CSIM_ON`宏关闭。
 
 ### Step4：打包IP核
 

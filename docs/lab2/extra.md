@@ -33,7 +33,7 @@
 &emsp;&emsp;（8）提交作业时，需将附加题的源程序文件和运行结果（卷积IP核的HLS源文件和头文件、  
 &emsp;&emsp;仿真源码文件、Tiny_YOLOv2_Quant.ipynb、output_quant_EXTRA.jpg）也一并提交。
 
-!!! Reference
+!!! hint "参考结果 :peach:"
     &emsp;&emsp;本题的参考结果如表3-1所示。
 
     <center>表3-1 非对称量化参考结果</center>

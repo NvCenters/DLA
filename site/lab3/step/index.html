@@ -1037,9 +1037,9 @@
 <h3 id="step3synthesis">Step3：综合/Synthesis</h3>
 <p>&emsp;&emsp;点击HLS工具栏的<img src="../assets/syn.png" width = 15>按钮，对编写的RNN加速器进行综合，生成RTL电路。</p>
 <p>&emsp;&emsp;综合成功后，可查看HLS生成的综合报告，必要时需要根据综合报告对IP核代码进行优化和改写。</p>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
-<p>在综合前，必须将<code>rnn.h</code>头文件中的<code>CSIM_ON</code>宏关闭。</p>
+<div class="admonition warning">
+<p class="admonition-title">注意！！！ <img alt="📢" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4e2.svg" title=":loudspeaker:" /></p>
+<p>&emsp;&emsp;在综合前，必须将<code>rnn.h</code>头文件中的<code>CSIM_ON</code>宏关闭。</p>
 </div>
 <h3 id="step4ip">Step4：打包IP核</h3>
 <p>&emsp;&emsp;点击HLS工具栏的<img src="../assets/pkg.png" width = 15>按钮，对综合后的RTL电路进行打包，生成IP核。</p>

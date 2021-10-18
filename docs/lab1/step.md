@@ -100,12 +100,12 @@
 <center><img src="../assets/2-14.png"></center>
 <center>图2-14 直接在代码中添加Directive</center>
 
-!!! Hints
+!!! hint "小提示 :bulb:"
     &emsp;&emsp;在图2-14中，每一个制导语句都指定了一个端口的总线类型、主从属性以及允许的最大数据深度等信息。例如，第一行指定了`feature_out`将作为AXI总线的从端口，且最大深度为4294967295。
 
 &emsp;&emsp;接着，可用同样的方法设置并行优化策略。
 
-!!! Comments
+!!! info "补充说明 :mega:"
     &emsp;&emsp;此处暂不添加优化语句。在后续的实验中，将会再讲解如何优化。
 
 &emsp;&emsp;Directive设置完毕，接下来需要对C代码进行综合，以生成RTL电路。
@@ -149,7 +149,7 @@
 <center><img src="../assets/2-21.png"></center>
 <center>图2-21 查看仿真波形</center>
 
-!!! Notes
+!!! info "补充说明 :mega:"
     &emsp;&emsp;对于本课程实验，可忽略C-RTL协同仿真的步骤。
 
 ### 1.7 导出RTL并打包成IP核/Export RTL
@@ -248,7 +248,7 @@
 
 &emsp;&emsp;再次点击`Run Connection Automation`，并勾选所有复选框，完成剩余的电路连接。
 
-!!! Attention
+!!! warning "注意 :gun:"
     &emsp;&emsp;自动连接完毕后，如果发现`axi_smc1`IP核的复位信号悬空，则需要手动将其与`axi_smc`IP核的复位信号连接起来。
 
 &emsp;&emsp;再次点击如图2-36所示的圆形箭头以重新布局，最终得到如图2-39所示的电路模块图。
@@ -263,7 +263,7 @@
 
 &emsp;&emsp;此时，将弹出对话框提示地址已经分配成功，点击OK按钮即可。分配完成后，`Auto Assign Address`按钮将变成灰色。
 
-!!! Notes
+!!! info "补充说明 :mega:"
     &emsp;&emsp;若打开`Address Editior`标签页时，`Auto Assign Address`按钮已经是灰色，说明地址已自动分配完成。
 
 &emsp;&emsp;点击回到`Diagram`标签页，点击`Validate Design`按钮，如图2-41所示。
@@ -303,7 +303,7 @@
 <center><img src="../assets/2-45.png" width = 400></center>
 <center>图2-45 拷贝Overlay到压缩包</center>
 
-!!! Notes
+!!! note "记笔记 :triangular_ruler:"
     &emsp;&emsp;在PYNQ开发中，`.tcl`文件和`.bit`文件在一起合称Overlay。
 
 ## 3. 上板测试
@@ -322,7 +322,7 @@
 <center><img src="../assets/2-47.png" width = 700></center>
 <center>图2-47 上传包含测试文件的.zip压缩包</center>
 
-!!! Comments
+!!! info "莫心急 :snail:"
     &emsp;&emsp;有时网络不稳定可能导致上传失败。若上传失败，请多尝试几次。
 
 &emsp;&emsp;展开`Upload`按钮右侧的`New`，并点击`Terminal`以新建一个命令行终端，如图2-48所示。
@@ -337,7 +337,7 @@ $> cd jupyter_notebooks/
 $> unzip mnist_cnn.zip
 ```
 
-!!! Tips
+!!! note "记笔记 :triangular_ruler:"
     &emsp;&emsp;在终端中，若遇到需要输入长串字符的情形，为避免误输入，请多使用`Tab`键。
     
     &emsp;&emsp;使用方法：  
@@ -353,5 +353,5 @@ $> unzip mnist_cnn.zip
 <center><img src="../assets/2-49.png"></center>
 <center>图2-49 `mnist_cnn.ipynb`的运行结果</center>
 
-!!! Hints
+!!! info "补充说明 :smiley:"
     &emsp;&emsp;感兴趣的同学可用Windows下的“画图”软件擦除`1.jpg`，并绘制其他数字；然后将图片上传回`mnist_cnn/data`文件夹，重新运行图2-49中的“5.CNN硬件推导”。修改`1.jpg`的时候注意不要更改图片的尺寸。

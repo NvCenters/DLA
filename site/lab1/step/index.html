@@ -1051,13 +1051,13 @@
 <p>&emsp;&emsp;第二种方法是直接在代码中插入形如<code>#pragma HLS xxx</code>的制导语句，如图2-14所示。</p>
 <p><center><img src="../assets/2-14.png"></center>
 <center>图2-14 直接在代码中添加Directive</center></p>
-<div class="admonition hints">
-<p class="admonition-title">Hints</p>
+<div class="admonition hint">
+<p class="admonition-title">小提示 <img alt="💡" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4a1.svg" title=":bulb:" /></p>
 <p>&emsp;&emsp;在图2-14中，每一个制导语句都指定了一个端口的总线类型、主从属性以及允许的最大数据深度等信息。例如，第一行指定了<code>feature_out</code>将作为AXI总线的从端口，且最大深度为4294967295。</p>
 </div>
 <p>&emsp;&emsp;接着，可用同样的方法设置并行优化策略。</p>
-<div class="admonition comments">
-<p class="admonition-title">Comments</p>
+<div class="admonition info">
+<p class="admonition-title">补充说明 <img alt="📣" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4e3.svg" title=":mega:" /></p>
 <p>&emsp;&emsp;此处暂不添加优化语句。在后续的实验中，将会再讲解如何优化。</p>
 </div>
 <p>&emsp;&emsp;Directive设置完毕，接下来需要对C代码进行综合，以生成RTL电路。</p>
@@ -1084,8 +1084,8 @@
 <p>&emsp;&emsp;还可点击工具条中的波形按钮以查看波形，此时将打开Vivado的仿真波形界面，如图2-21所示。</p>
 <p><center><img src="../assets/2-21.png"></center>
 <center>图2-21 查看仿真波形</center></p>
-<div class="admonition notes">
-<p class="admonition-title">Notes</p>
+<div class="admonition info">
+<p class="admonition-title">补充说明 <img alt="📣" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4e3.svg" title=":mega:" /></p>
 <p>&emsp;&emsp;对于本课程实验，可忽略C-RTL协同仿真的步骤。</p>
 </div>
 <h3 id="17-rtlipexport-rtl">1.7 导出RTL并打包成IP核/Export RTL</h3>
@@ -1143,8 +1143,8 @@
 <p><center><img src="../assets/2-38.png"></center>
 <center>图2-38 连接池化IP核</center></p>
 <p>&emsp;&emsp;再次点击<code>Run Connection Automation</code>，并勾选所有复选框，完成剩余的电路连接。</p>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
+<div class="admonition warning">
+<p class="admonition-title">注意 <img alt="🔫" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f52b.svg" title=":gun:" /></p>
 <p>&emsp;&emsp;自动连接完毕后，如果发现<code>axi_smc1</code>IP核的复位信号悬空，则需要手动将其与<code>axi_smc</code>IP核的复位信号连接起来。</p>
 </div>
 <p>&emsp;&emsp;再次点击如图2-36所示的圆形箭头以重新布局，最终得到如图2-39所示的电路模块图。</p>
@@ -1154,8 +1154,8 @@
 <p><center><img src="../assets/2-40.png" width = 250></center>
 <center>图2-40 分配地址空间</center></p>
 <p>&emsp;&emsp;此时，将弹出对话框提示地址已经分配成功，点击OK按钮即可。分配完成后，<code>Auto Assign Address</code>按钮将变成灰色。</p>
-<div class="admonition notes">
-<p class="admonition-title">Notes</p>
+<div class="admonition info">
+<p class="admonition-title">补充说明 <img alt="📣" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4e3.svg" title=":mega:" /></p>
 <p>&emsp;&emsp;若打开<code>Address Editior</code>标签页时，<code>Auto Assign Address</code>按钮已经是灰色，说明地址已自动分配完成。</p>
 </div>
 <p>&emsp;&emsp;点击回到<code>Diagram</code>标签页，点击<code>Validate Design</code>按钮，如图2-41所示。</p>
@@ -1179,8 +1179,8 @@
 <p>&emsp;&emsp;将上面导出的.tcl和.bit文件分别重命名为<code>mnist_cnn.tcl</code>和<code>mnist_cnn.bit</code>，并将其拷贝到实验包的<code>mnist_cnn.zip</code>压缩包中，如图2-45所示。</p>
 <p><center><img src="../assets/2-45.png" width = 400></center>
 <center>图2-45 拷贝Overlay到压缩包</center></p>
-<div class="admonition notes">
-<p class="admonition-title">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">记笔记 <img alt="📐" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4d0.svg" title=":triangular_ruler:" /></p>
 <p>&emsp;&emsp;在PYNQ开发中，<code>.tcl</code>文件和<code>.bit</code>文件在一起合称Overlay。</p>
 </div>
 <h2 id="3">3. 上板测试</h2>
@@ -1192,8 +1192,8 @@
 <p>&emsp;&emsp;点击文件右侧蓝色的“Upload”按钮，开始上传，如图2-47所示。</p>
 <p><center><img src="../assets/2-47.png" width = 700></center>
 <center>图2-47 上传包含测试文件的.zip压缩包</center></p>
-<div class="admonition comments">
-<p class="admonition-title">Comments</p>
+<div class="admonition info">
+<p class="admonition-title">莫心急 <img alt="🐌" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f40c.svg" title=":snail:" /></p>
 <p>&emsp;&emsp;有时网络不稳定可能导致上传失败。若上传失败，请多尝试几次。</p>
 </div>
 <p>&emsp;&emsp;展开<code>Upload</code>按钮右侧的<code>New</code>，并点击<code>Terminal</code>以新建一个命令行终端，如图2-48所示。</p>
@@ -1203,8 +1203,8 @@
 <div class="highlight"><pre><span></span><code>$&gt; <span class="nb">cd</span> jupyter_notebooks/
 $&gt; unzip mnist_cnn.zip
 </code></pre></div>
-<div class="admonition tips">
-<p class="admonition-title">Tips</p>
+<div class="admonition note">
+<p class="admonition-title">记笔记 <img alt="📐" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4d0.svg" title=":triangular_ruler:" /></p>
 <p>&emsp;&emsp;在终端中，若遇到需要输入长串字符的情形，为避免误输入，请多使用<code>Tab</code>键。</p>
 <p>&emsp;&emsp;使用方法：<br />
 &emsp;&emsp;&emsp;&emsp;先手动输入前几个字符，再按下<code>Tab</code>键，此时将自动补全。若没有补全，说明当前目录至少存在2个文件，<br />
@@ -1215,8 +1215,8 @@ $&gt; unzip mnist_cnn.zip
 <p>&emsp;&emsp;打开<code>mnist_cnn.ipynb</code>，并点击菜单栏的Cell-&gt;Run All开始运行测试。如果所设计的IP核功能正确，则程序应当能够正确识别出<code>mnist_cnn/data/</code>目录下名为<code>1.jpg</code>的手写数字图片，将输出如图2-49所示的结果。</p>
 <p><center><img src="../assets/2-49.png"></center>
 <center>图2-49 <code>mnist_cnn.ipynb</code>的运行结果</center></p>
-<div class="admonition hints">
-<p class="admonition-title">Hints</p>
+<div class="admonition info">
+<p class="admonition-title">补充说明 <img alt="😃" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f603.svg" title=":smiley:" /></p>
 <p>&emsp;&emsp;感兴趣的同学可用Windows下的“画图”软件擦除<code>1.jpg</code>，并绘制其他数字；然后将图片上传回<code>mnist_cnn/data</code>文件夹，重新运行图2-49中的“5.CNN硬件推导”。修改<code>1.jpg</code>的时候注意不要更改图片的尺寸。</p>
 </div>
                 

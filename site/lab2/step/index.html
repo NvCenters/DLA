@@ -846,15 +846,15 @@
 <p>&emsp;&emsp;首先在Vivado HLS工具中打开实验包<code>yolo_hls\conv_core</code>目录的卷积IP核工程。观察卷积函数的函数签名变化，如图2-6所示。</p>
 <p><center><img src="../assets/2-6.png"></center>
 <center>图2-6 支持INT8的卷积函数接口定义</center></p>
-<div class="admonition comments">
-<p class="admonition-title">Comments</p>
+<div class="admonition hint">
+<p class="admonition-title">小提示 <img alt="💡" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4a1.svg" title=":bulb:" /></p>
 <p>&emsp;&emsp;由图2-6可知，特征图输入端口feature_in和网络权值输入端口W的数据类型均被更改为INT8的数据类型；此外还新增了参数qmax，用于表示feature_in和W的区间端点的MAX值，用于计算输出特征图的缩放因子Δ_o从而实现输出特征图的去量化。</p>
 </div>
 <p>&emsp;&emsp;请根据conv.cpp中的代码注释提示，补全qmax总线接口信号定义，并完成量化和反量化相关的代码。</p>
 <p>&emsp;&emsp;代码编写完成后，对修改后的卷积IP核进行仿真，确认代码功能正确后，点击工具栏的<img src="../assets/syn.jpg" width = 25>按钮进行综合，最后点击工具栏的<img src="../assets/pkg.png" width = 20>按钮生成新的卷积IP核。</p>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
-<p>IP核代码修改后，必须相应地修改TestBench，等CSim通过后才可进行后续的步骤。</p>
+<div class="admonition warning">
+<p class="admonition-title">看过来 <img alt="📷" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4f7.svg" title=":camera:" /></p>
+<p>&emsp;&emsp;IP核代码修改后，必须相应地修改TestBench，等CSim通过后才可进行后续的步骤。</p>
 </div>
 <h2 id="4-block-design">4. 更新Block Design</h2>
 <p>&emsp;&emsp;实验包中的yolo_vivado目录中提供了已经构建好Block Design电路图的Vivado模板工程。同学们需要 <strong>将池化IP核与量化后的卷积IP核<u><font style="background: yellow">更新</font></u></strong> 到模板工程的Block Design电路图中，并生成比特流。</p>
@@ -873,25 +873,25 @@
 <p><center><img src="../assets/2-9a.png" width = 600> <img src="../assets/2-9b.png" width = 605> <img src="../assets/2-9c.png" width = 600></center>
 <center>图2-9 观察量化前后的运行时间差异</center></p>
 <div class="admonition question">
-<p class="admonition-title">Question</p>
-<p>&emsp;&emsp;[<font color = red><strong>报告要求1</strong></font>] 对比分析量化前后的运行时间差别，将运行结果截图，写到实验报告中。</p>
+<p class="admonition-title">报告要求1 <img alt="✏" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/270f.svg" title=":pencil2:" /></p>
+<p>&emsp;&emsp;对比分析量化前后的运行时间差别，将运行结果截图，写到实验报告中。</p>
 </div>
 <p>&emsp;&emsp;无量化的Tiny YOLOv2算法输出的图片是output.jpg，量化后的Tiny YOLOv2算法输出的图片是output_quant.jpg。</p>
 <div class="admonition question">
-<p class="admonition-title">Question</p>
-<p>&emsp;&emsp;[<font color = red><strong>报告要求2</strong></font>] 对比量化前后的输出图片，分析量化前后的差异，并将截图和分析写入实验报告中。</p>
+<p class="admonition-title">报告要求2 <img alt="✏" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/270f.svg" title=":pencil2:" /></p>
+<p>&emsp;&emsp;对比量化前后的输出图片，分析量化前后的差异，并将截图和分析写入实验报告中。</p>
 </div>
 <h2 id="6-ip">6. 优化卷积、池化IP核</h2>
 <p>&emsp;&emsp;参考实验包中的《DLA3.HLS设计》P52开始的“循环展开与流水线”章节，使用循环展开与流水线方法优化卷积IP核与池化IP核。优化完成后，需在HLS工程中综合并导出IP核。</p>
 <div class="admonition question">
-<p class="admonition-title">Question</p>
-<p>&emsp;&emsp;[<font color = red><strong>报告要求3</strong></font>] 对比分析优化前后的综合分析报告，截图及对比优化前后的差异，写入实验报告当中。</p>
+<p class="admonition-title">报告要求3 <img alt="✏" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/270f.svg" title=":pencil2:" /></p>
+<p>&emsp;&emsp;对比分析优化前后的综合分析报告，截图及对比优化前后的差异，写入实验报告当中。</p>
 </div>
 <p>&emsp;&emsp;将优化后的IP核更新到Vivado的Block Design中，生成比特流并导出Overlay到PYNQ的yolo目录下。然后执行Tiny_YOLOv2_Quant.ipynb，观察第5层卷积和池化、第9层全连接的运算时间。</p>
 <div class="admonition question">
-<p class="admonition-title">Question</p>
-<p>&emsp;&emsp;[<font color = red><strong>报告要求4</strong></font>] 对比分析优化先后的运行时间差异，将运行结果截图，写入实验报告中。</p>
-<p>&emsp;&emsp;[<font color = red><strong>报告要求5</strong></font>] 把优化后的output_quant.jpg保存下来，截图并分析优化前后的差异，写入实验报告中。</p>
+<p class="admonition-title">报告要求4&amp;5 <img alt="✏" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/270f.svg" title=":pencil2:" /></p>
+<p>&emsp;&emsp;对比分析优化先后的运行时间差异，将运行结果截图，写入实验报告中。</p>
+<p>&emsp;&emsp;把优化后的output_quant.jpg保存下来，截图并分析优化前后的差异，写入实验报告中。</p>
 </div>
                 
               

@@ -1095,9 +1095,9 @@
 <li>（1）简单性和规律性</li>
 </ul>
 <p>&emsp;&emsp;Kung认为在设计专用系统时，首先应当考虑的是系统的成本或代价。换言之，在满足应用需求的前提下，应当尽可能将系统的成本控制到最低。一般而言，系统的成本包括设计成本和器件成本，而其中又以设计成本为主。我们在数字逻辑设计课程中讲授过系统的模块化设计。试想如果一个系统可以被划分成若干个功能几乎完全相同的子模块，那么这个系统就可以使用一个简单的、有规律的硬件架构来实现。得益于简单性和规律性，系统将具有较低的设计成本——对于使用HDL开发电路而言，重复的模块只需要不断实例化同一个module即可。</p>
-<div class="admonition notes">
-<p class="admonition-title">Notes</p>
-<p>除了降低设计成本外，简单性和规律性还有利于提高系统的可扩展性。</p>
+<div class="admonition note">
+<p class="admonition-title">记笔记 <img alt="📐" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4d0.svg" title=":triangular_ruler:" /></p>
+<p>&emsp;&emsp;除了降低设计成本外，简单性和规律性还有利于提高系统的可扩展性。</p>
 </div>
 <ul>
 <li>（2）并行和通信</li>
@@ -1110,9 +1110,9 @@
 <p><center><img src="../assets/1-1.png" width = 400></center>
 <center>图1-1 平衡计算与I/O的基本原理</center></p>
 <p>&emsp;&emsp;假设在图1-1中，数据在存储器和PE之间传输需要耗费<code>100ns</code>，PE的运算延迟忽略不计。在架构1中，每<code>200ns</code>才能完成一次数据运算，因而其运算能力是5MOPS（Million Operations Per Second）。在架构2中，数据传输时延不变，但每次传输可以完成6次数据运算，因而其运算能力相比架构1提高到30MOPS。</p>
-<div class="admonition notes">
-<p class="admonition-title">Notes</p>
-<p>图1-2所示的平衡计算与I/O的方法同时也体现了系统设计的简单性和规律性。</p>
+<div class="admonition hint">
+<p class="admonition-title">小提示 <img alt="💡" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4a1.svg" title=":bulb:" /></p>
+<p>&emsp;&emsp;图1-2所示的平衡计算与I/O的方法同时也体现了系统设计的简单性和规律性。</p>
 </div>
 <p>&emsp;&emsp;需要注意的是，虽然理论上架构2的PE数量越多，其运算能力越强，但不论如何，数据传输时延都需要200ns。这意味着这种类型的架构只适合那些对传输带宽要求较低的计算密集型应用。</p>
 <h3 id="12">1.2 拓扑结构</h3>
@@ -1185,14 +1185,14 @@
 <p><center><img src="../assets/1-13.png"></center>
 <center>图1-13 脉动阵列计算三维卷积的第12个时钟</center></p>
 <p>&emsp;&emsp;接下来，从第13拍到第15拍，每一拍都流出2个矩阵<script type="math/tex">\pmb Y</script>的元素。最后一个元素将在第16拍流出，此时计算结束。</p>
-<div class="admonition attention">
-<p class="admonition-title">Attention</p>
+<div class="admonition warning">
+<p class="admonition-title">注意 <img alt="🔫" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f52b.svg" title=":gun:" /></p>
 <p>&emsp;&emsp;需要注意的是，矩阵<script type="math/tex">\pmb Y</script>的尺寸和形状与输出特征图的形状不同。因此，在真正输出结果之前，需要对矩阵<script type="math/tex">\pmb Y</script>的元素进行重新排布，从而将其还原成输出特征图应有的尺寸和形状。</p>
 </div>
 <h3 id="32-2">3.2 方法2：矩阵乘法</h3>
 <p>&emsp;&emsp;显然，要想用脉动阵列实现三维卷积，除了上述方法之外，还可以在im2col操作之后，直接将其当成普通的矩阵乘法处理。</p>
 <div class="admonition question">
-<p class="admonition-title">Question</p>
+<p class="admonition-title">动动脑筋 <img alt="💫" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4ab.svg" title=":dizzy:" /></p>
 <p>&emsp;&emsp;请对比上述两种方法的优缺点。</p>
 </div>
 <h2 id="3-cnnmnist">3. 基于CNN识别MNIST手写数字</h2>
@@ -1360,8 +1360,8 @@ $&gt; python mnist_int16_test.py
 </code></pre></div>
 <p><center>图1-30 脉动阵列IP核的驱动函数</center></p>
 <p>&emsp;&emsp;池化IP核的驱动函数与<code>RunSystolic</code>函数类似，此处不再赘述。</p>
-<div class="admonition hints">
-<p class="admonition-title">Hints</p>
+<div class="admonition info">
+<p class="admonition-title">补充说明 <img alt="📣" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4e3.svg" title=":mega:" /></p>
 <p>&emsp;&emsp;需要注意的是，脉动阵列IP核默认仅支持GEMM运算，因此还需要另外实现卷积函数<code>hwConv</code>。这个函数负责完成特征图和卷积核的im2col操作，并调整运算结果的尺寸和形状。</p>
 </div>
                 

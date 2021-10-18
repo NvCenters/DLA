@@ -52,15 +52,15 @@
 <center><img src="../assets/2-6.png"></center>
 <center>图2-6 支持INT8的卷积函数接口定义</center>
 
-!!! Comments
+!!! hint "小提示 :bulb:"
     &emsp;&emsp;由图2-6可知，特征图输入端口feature_in和网络权值输入端口W的数据类型均被更改为INT8的数据类型；此外还新增了参数qmax，用于表示feature_in和W的区间端点的MAX值，用于计算输出特征图的缩放因子Δ_o从而实现输出特征图的去量化。
 
 &emsp;&emsp;请根据conv.cpp中的代码注释提示，补全qmax总线接口信号定义，并完成量化和反量化相关的代码。
 
 &emsp;&emsp;代码编写完成后，对修改后的卷积IP核进行仿真，确认代码功能正确后，点击工具栏的<img src="../assets/syn.jpg" width = 25>按钮进行综合，最后点击工具栏的<img src="../assets/pkg.png" width = 20>按钮生成新的卷积IP核。
 
-!!! Attention
-    IP核代码修改后，必须相应地修改TestBench，等CSim通过后才可进行后续的步骤。
+!!! warning "看过来 :camera:"
+    &emsp;&emsp;IP核代码修改后，必须相应地修改TestBench，等CSim通过后才可进行后续的步骤。
 
 
 ## 4. 更新Block Design
@@ -93,25 +93,25 @@
 <center><img src="../assets/2-9a.png" width = 600> <img src="../assets/2-9b.png" width = 605> <img src="../assets/2-9c.png" width = 600></center>
 <center>图2-9 观察量化前后的运行时间差异</center>
 
-!!! Question
-    &emsp;&emsp;[<font color = red>**报告要求1**</font>] 对比分析量化前后的运行时间差别，将运行结果截图，写到实验报告中。
+!!! question "报告要求1 :pencil2:"
+    &emsp;&emsp;对比分析量化前后的运行时间差别，将运行结果截图，写到实验报告中。
 
 &emsp;&emsp;无量化的Tiny YOLOv2算法输出的图片是output.jpg，量化后的Tiny YOLOv2算法输出的图片是output_quant.jpg。
 
-!!! Question
-    &emsp;&emsp;[<font color = red>**报告要求2**</font>] 对比量化前后的输出图片，分析量化前后的差异，并将截图和分析写入实验报告中。
+!!! question "报告要求2 :pencil2:"
+    &emsp;&emsp;对比量化前后的输出图片，分析量化前后的差异，并将截图和分析写入实验报告中。
 
 
 ## 6. 优化卷积、池化IP核
 
 &emsp;&emsp;参考实验包中的《DLA3.HLS设计》P52开始的“循环展开与流水线”章节，使用循环展开与流水线方法优化卷积IP核与池化IP核。优化完成后，需在HLS工程中综合并导出IP核。
 
-!!! Question
-    &emsp;&emsp;[<font color = red>**报告要求3**</font>] 对比分析优化前后的综合分析报告，截图及对比优化前后的差异，写入实验报告当中。
+!!! question "报告要求3 :pencil2:"
+    &emsp;&emsp;对比分析优化前后的综合分析报告，截图及对比优化前后的差异，写入实验报告当中。
 
 &emsp;&emsp;将优化后的IP核更新到Vivado的Block Design中，生成比特流并导出Overlay到PYNQ的yolo目录下。然后执行Tiny_YOLOv2_Quant.ipynb，观察第5层卷积和池化、第9层全连接的运算时间。
 
-!!! Question
-    &emsp;&emsp;[<font color = red>**报告要求4**</font>] 对比分析优化先后的运行时间差异，将运行结果截图，写入实验报告中。
+!!! question "报告要求4&5 :pencil2:"
+    &emsp;&emsp;对比分析优化先后的运行时间差异，将运行结果截图，写入实验报告中。
 
-    &emsp;&emsp;[<font color = red>**报告要求5**</font>] 把优化后的output_quant.jpg保存下来，截图并分析优化前后的差异，写入实验报告中。
+    &emsp;&emsp;把优化后的output_quant.jpg保存下来，截图并分析优化前后的差异，写入实验报告中。

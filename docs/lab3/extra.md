@@ -50,7 +50,7 @@
 &emsp;&emsp;行结果（RNN IP核的源文件、优化前后的运行结果和运行时间截图、mnist_lstm.ipynb）也一  
 &emsp;&emsp;并提交。
 
-!!! Reference
+!!! hint "参考结果 :peach:"
     &emsp;&emsp;优化效果参考：在图3-2中，当$n = 8$时，加速比从1.4提高到10。
 
 ## 题目3：RNN量化（<font color=green>**+3.5**</font>分）

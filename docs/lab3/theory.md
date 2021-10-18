@@ -156,7 +156,7 @@ $$ \pmb C_t = \pmb C_{t-1} * \pmb f_t + \pmb i_t * \pmb C ̃_t \tag {1-11} $$
 
 &emsp;&emsp;其中，$*$表示向量的 *Hadamard* 积。
 
-!!! Addition
+!!! info "补充说明 :mega:"
     向量 *Hadamard* 积的定义：  
     &emsp;&emsp;设有维度相同的向量$\pmb a = \{a_1,a_2,⋯,a_n\}$和向量$\pmb b = \{b_1,b_2,⋯,b_n\}$，则有：  
     <center>$\pmb a * \pmb b = \{a_1 b_1, a_2 b_2, ⋯, a_n b_n\}$</center>

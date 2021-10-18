@@ -52,8 +52,8 @@
 
 &emsp;&emsp;与一般的计算机系统类似，PYNQ的系统架构可粗分为3个层次：硬件层、系统软件层和应用层。硬件层即是ZYNQ，主要包括PS和PL两部分。系统软件层包括FSBL（First Stage BootLoader）、U-Boot、嵌入式Linux、设备驱动程序等等。应用层则包括Python开发环境、Jupyter Notebook等应用软件。
 
-!!! Notes
-    本课程实验的Xilinx PYNQ-Z2开发板，其PS采用双核的ARM Cortex-A9处理器，主芯片型号为<font color = orange>**xc7z020clg400-1**</font>。
+!!! note "划重点 :point_down:"
+    &emsp;&emsp;本课程实验的Xilinx PYNQ-Z2开发板，其PS采用的是双核的ARM Cortex-A9处理器，主芯片型号为<font color = orange>**xc7z020clg400-1**</font>。
 
 &emsp;&emsp;可将图1-3所示的架构简化成如图1-4所示的架构。
 

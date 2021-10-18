@@ -21,8 +21,7 @@
 
 &emsp;&emsp;将实验报告转成pdf，以“<font color = orange>**学号_姓名_DLA实验4.pdf**</font>”命名并提交（9分）。
 
-!!! Attention
-
+!!! warning "作业提交 :calendar:"
     &emsp;&emsp;作业提交方法见《[HITsz Grader学生端使用手册v1.0](https://gitee.com/hitsz-datasci/course-dla/blob/master/stupkt/HITsz Grader%E5%AD%A6%E7%94%9F%E7%AB%AF%E4%BD%BF%E7%94%A8%E6%89%8B%E5%86%8CV1.0.pdf)》。
 
     &emsp;&emsp;作业提交<font color = red>**Deadline**</font>：<font color = DarkCyan>**下周同一上课时间前**</font>。
