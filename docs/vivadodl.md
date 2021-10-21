@@ -10,4 +10,4 @@
 
 ## 内网下载链接
 
-- [http://10.249.12.209/home.html](http://10.249.12.209/home.html)
+- [http://10.249.11.141/index.php/s/nYOewRSkGz0NEeR](http://10.249.11.141/index.php/s/nYOewRSkGz0NEeR)
