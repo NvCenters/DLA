@@ -1187,7 +1187,7 @@
 <p>&emsp;&emsp;接下来，从第13拍到第15拍，每一拍都流出2个矩阵<script type="math/tex">\pmb Y</script>的元素。最后一个元素将在第16拍流出，此时计算结束。</p>
 <div class="admonition warning">
 <p class="admonition-title">注意 <img alt="🔫" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f52b.svg" title=":gun:" /></p>
-<p>&emsp;&emsp;需要注意的是，矩阵<script type="math/tex">\pmb Y</script>的尺寸和形状与输出特征图的形状不同。因此，在真正输出结果之前，需要对矩阵<script type="math/tex">\pmb Y</script>的元素进行重新排布，从而将其还原成输出特征图应有的尺寸和形状。</p>
+<p>&emsp;&emsp;矩阵<script type="math/tex">\pmb Y</script>的尺寸和形状与输出特征图的形状不同。因此，在真正输出结果之前，需要对矩阵<script type="math/tex">\pmb Y</script>的元素进行重新排布，从而将其还原成输出特征图应有的尺寸和形状。</p>
 </div>
 <h3 id="32-2">3.2 方法2：矩阵乘法</h3>
 <p>&emsp;&emsp;显然，要想用脉动阵列实现三维卷积，除了上述方法之外，还可以在im2col操作之后，直接将其当成普通的矩阵乘法处理。</p>
@@ -1362,7 +1362,7 @@ $&gt; python mnist_int16_test.py
 <p>&emsp;&emsp;池化IP核的驱动函数与<code>RunSystolic</code>函数类似，此处不再赘述。</p>
 <div class="admonition info">
 <p class="admonition-title">补充说明 <img alt="📣" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f4e3.svg" title=":mega:" /></p>
-<p>&emsp;&emsp;需要注意的是，脉动阵列IP核默认仅支持GEMM运算，因此还需要另外实现卷积函数<code>hwConv</code>。这个函数负责完成特征图和卷积核的im2col操作，并调整运算结果的尺寸和形状。</p>
+<p>&emsp;&emsp;脉动阵列IP核默认仅支持GEMM运算，所以如果想使用该IP核计算卷积，还需要另外实现卷积函数<code>hwConv</code>。这个函数负责完成特征图和卷积核的im2col操作，然后调用脉动阵列IP核，最后调整运算结果的尺寸和形状。</p>
 </div>
                 
               
