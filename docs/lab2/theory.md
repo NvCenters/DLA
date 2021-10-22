@@ -325,6 +325,38 @@ for (m = 0; m < OUT_CH; m++)
 
 ## 4. HLS优化
 
+&emsp;&emsp;**延迟**（Latency）和 **吞吐量**（Throughput）是电路设计中常用的2个性能指标。延迟指的是从输入数据到输出结果之间的耗时，而吞吐量则是2次输出结果之间的时间差。
+
+!!! example "栗子++ :chestnut:"
+    &emsp;&emsp;假设某流水线电路的时空图如图1-19所示，则其延迟为6个时钟周期，吞吐量为2个时钟周期。
+
+    <center><img src="../assets/1-19a.png" width = 550></center>
+    <center>图1-19 某流水线电路时空图</center>
+
+&emsp;&emsp;以下将分别针对延迟和吞吐量两个指标展开HLS优化方法的介绍。
+
+### 4.1 延迟优化
+
+&emsp;&emsp;Vivado HLS的默认策略是通过分析代码，生成延迟尽可能低的RTL电路，但所生成的电路通常还具有较大的优化空间。
+
+&emsp;&emsp;默认情况下，如果代码中存在多个循环，则在生成的RTL电路中，这些循环对应的电路也将顺序执行。为了使得多个循环能够尽可能地并行执行，从而降低延迟，可采用以下3种优化方法：
+
+&emsp;&emsp;:one: 尽可能地将循环进行合并
+
+&emsp;&emsp;多个循环即使相互之间完全独立，在RTL中默认也要顺序执行。为此，当循环的 **边界相同**，且循环之间 **不存在依赖关系** 时，可将其合并成单个循环，如图1-20所示。
+
+<center><img src="../assets/1-20a.png"></center>
+<center>图1-20 循环合并</center>
+
+&emsp;&emsp;:two: 将每个循环放在单独的子函数内
+
+&emsp;&emsp;:three: 在循环之间使用数据流
+
+
+### 4.2 吞吐量优化
+
+&emsp;&emsp;
+
 &emsp;&emsp;循环展开、流水线、数组划分、内联等是常用的程序优化手段。HLS也可以使用这些方法对所设计的IP核进行优化。此处仅对循环展开和流水线进行简要介绍，更多HLS优化方法详见[Xilinx官网](https://www.xilinx.com/html_docs/xilinx2019_1/sdsoc_doc/hls-pragmas-okr1504034364623.html#fde1504034360078)和理论课PPT《DLA3.HLS设计》。
 
 ### 4.1 循环展开
