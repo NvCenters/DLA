@@ -323,6 +323,8 @@ for (m = 0; m < OUT_CH; m++)
 
 &emsp;&emsp;此外，量化只能减轻模型运行时对存储和带宽的依赖，并不能直接带来网络前向推导的加速效果，并且通常会造成模型预测精度的降低。
 
+
+
 ## 4. HLS优化
 
 &emsp;&emsp;**延迟**（Latency）和 **吞吐量**（Throughput）是电路设计中常用的2个性能指标。延迟指的是从输入数据到输出结果之间的耗时，而吞吐量则是2次输出结果之间的时间差。
@@ -330,85 +332,246 @@ for (m = 0; m < OUT_CH; m++)
 !!! example "栗子++ :chestnut:"
     &emsp;&emsp;假设某流水线电路的时空图如图1-19所示，则其延迟为6个时钟周期，吞吐量为2个时钟周期。
 
-    <center><img src="../assets/1-19a.png" width = 550></center>
+    <center><img src="../assets/1-19.png" width = 550></center>
     <center>图1-19 某流水线电路时空图</center>
 
-&emsp;&emsp;以下将分别针对延迟和吞吐量两个指标展开HLS优化方法的介绍。
+&emsp;&emsp;以下将分别针对延迟和吞吐量两个指标，对常用的HLS优化方法进行介绍。更详细、更全面的优化方法请参考[Xilinx官网](https://www.xilinx.com/html_docs/xilinx2019_1/sdsoc_doc/hls-pragmas-okr1504034364623.html#fde1504034360078)。
+
 
 ### 4.1 延迟优化
 
 &emsp;&emsp;Vivado HLS的默认策略是通过分析代码，生成延迟尽可能低的RTL电路，但所生成的电路通常还具有较大的优化空间。
 
-&emsp;&emsp;默认情况下，如果代码中存在多个循环，则在生成的RTL电路中，这些循环对应的电路也将顺序执行。为了使得多个循环能够尽可能地并行执行，从而降低延迟，可采用以下3种优化方法：
+#### 4.1.1 降低单个循环的延迟
 
-&emsp;&emsp;:one: 尽可能地将循环进行合并
+&emsp;&emsp;循环是代码中最常见的结构之一，如何降低循环的延迟显然是延迟优化的关键问题。在HLS中，可采用以下2种方法减少单个循环的延迟：
 
-&emsp;&emsp;多个循环即使相互之间完全独立，在RTL中默认也要顺序执行。为此，当循环的 **边界相同**，且循环之间 **不存在依赖关系** 时，可将其合并成单个循环，如图1-20所示。
+&emsp;&emsp;:one: **循环展开（Unroll）**
 
-<center><img src="../assets/1-20a.png"></center>
-<center>图1-20 循环合并</center>
+&emsp;&emsp;HLS使用一个硬件模块实现循环体。如果循环语句的循环次数为n，则该硬件模块将被执行n次。假如现在每次循环执行m次循环体，那么完成相同的功能只需要n/m次，这就是循环展开的基本思想。循环展开的本质是牺牲更多的资源来换取加速效果。
 
-&emsp;&emsp;:two: 将每个循环放在单独的子函数内
+&emsp;&emsp;在HLS中，可使用`#pragma HLS UNROLL factor=<int>`的制导语句来告诉编译器哪个地方需要做循环展开。其中，参数`factor`用于指示循环体应该被复制多少次。当某个循环被展开了m次后，HLS编译器将生成m个硬件模块并行执行。
 
-&emsp;&emsp;:three: 在循环之间使用数据流
+!!! example "栗子Again :chestnut:"
+    &emsp;&emsp;使用HLS Directive对下列程序进行`factor`为2的展开：
+
+    ``` C++
+    for (int i = 0; i < X; i++)
+    {  
+    #pragma HLS unroll factor=2  
+        a[i] = b[i] + c[i];  
+    }
+    ```
+
+    &emsp;&emsp;上述代码等效于：
+
+    ``` C++
+    for (int i = 0; i < X; i += 2)
+    {  
+        a[i] = b[i] + c[i];  
+        if (i+1 >= X) break;  
+        a[i+1] = b[i+1] + c[i+1];  
+    }
+    ```
+
+    &emsp;&emsp;需要注意的是，上述代码中的if语句不会生成对应的电路，此处仅仅是为了保证逻辑的正确性。
+
+    &emsp;&emsp;对于软件来说，上述代码会比原代码更快 —— **不仅减少了指令预测执行的预测失败次数，还减少了循环过渡时的条件判断和计数器更新次数**；对于硬件来说，上述代码会生成2个可并行执行的加法器，理论性能翻倍，但资源消耗也相应增加。
+
+&emsp;&emsp;循环展开的一种简单的实现方法是直接使用`#pragma HLS UNROLL`来实现循环的完全展开，即如果循环次数为X，那么HLS编译器将会对循环体展开X次。显然，该用法要求循环边界是常数。需要注意的是，当循环次数较大时，完全展开将消耗大量的资源，从而可能导致展开失败。此时，需要根据芯片的实际资源数量，结合报错信息或综合报告，对展开次数进行合理的调整。
+
+&emsp;&emsp;:two: **循环展平（Flatten）**
+
+&emsp;&emsp;上文介绍循环展开时提到，减少循环过渡时的条件判断和计数器更新次数，可以减少循环的延迟，从而提高性能，循环展平的基本原理也是如此。所谓循环展平，指的是将嵌套循环（Nested Loop）的内层循环合并到外层循环之上。
+
+&emsp;&emsp;在HLS中，可使用`#pragma HLS loop_flatten`的制导语句来告诉编译器哪个循环需要展平。
+
+!!! example "More栗子 :chestnut:"
+    &emsp;&emsp;使用HLS Directive对下列嵌套循环进行展平：
+
+    ``` C++
+    for (int i = 0; i < M; i++)
+        for (int j = 0; j < N; j++)
+        {
+    #pragma HLS loop_flatten
+            // Loop body
+        }
+    }
+    ```
+
+    &emsp;&emsp;上述代码等效于：
+
+    ``` C++
+    for (int i = 0; i < M*N; i++)
+        // Loop body
+    ```
+
+&emsp;&emsp;有时HLS编译器也会根据情况自动展平内层循环。如果想维持循环的嵌套关系，可使用`#pragma HLS loop_flatten off`防止编译器展平。
+
+!!! warning "注意事项 :loudspeaker:"
+    &emsp;&emsp;循环展平要求嵌套循环必须是 **完美循环**（Perfect Loop）或 **半完美循环**（Semi-Perfect Loop） —— 完美循环指的是循环的边界是常数，且循环体只出现在最内层循环；半完美循环允许外循环的边界是变量，但内循环边界必须是常数，且循环体同样只能出现在最内层循环。
+
+    &emsp;&emsp;PS：为了降低延迟，可将其他类型的循环改写成完美循环或半完美循环。
+
+#### 4.1.2 多个循环的并行化
+
+&emsp;&emsp;默认情况下，若代码中存在多个循环，则在生成的RTL电路中，这些循环对应的电路也将顺序执行。为了使得多个循环能够尽可能地并行执行，从而降低延迟，可采用以下3种优化方法：
+
+&emsp;&emsp;:one: **循环合并**
+
+&emsp;&emsp;多个循环即使相互之间完全独立，在RTL中默认也要按顺序执行。为此，当循环的 **边界相同**，且循环之间 **不存在依赖关系** 时，可将其合并成单个循环。
+
+&emsp;&emsp;在HLS中，可使用`#pragma HLS loop_merge`的制导语句自动完成循环的合并。
+
+!!! example "栗子Again&again :chestnut:"
+    &emsp;&emsp;使用HLS Directive对下列程序进行循环的自动合并：
+
+    ``` C++
+    void func (...) {
+    #pragma HLS loop_merge
+        L1: for (int i = 0; i < 8; i++) {
+            // Loop body of L1
+
+        L2: for (int i = 0; i < 4; i++)
+            L3: for (int j = 0; j < 5; j++)
+                // Loop body of L3
+
+        L4: for (int i = 0; i < 13; i++)
+            // Loop body of L4
+    }
+    ```
+
+    &emsp;&emsp;上述代码等效于：
+
+    ``` C++
+    void func (...) {
+        MERGED: for (int i = 0; i < 20; i++) {
+            if (/* condition1 */)
+                // Loop body of L1
+            
+            // Flattened loop body of L3
+
+            if (/* condition4 */)
+                // Loop body of L4
+        }
+    }
+    ```
+
+    &emsp;&emsp;需要注意的是，循环`L2`和`L3`是完美循环，将被HLS编译器自动展平。
+
+!!! warning "注意事项 :loudspeaker:"
+    &emsp;&emsp;循环合并的使用应遵循下列规则：  
+    &emsp;&emsp;1. 如果合并前所有循环的边界都是常数，则合并后的循环边界应取合并前的最大值；  
+    &emsp;&emsp;2. 如果合并前所有循环的边界都是变量，则这些循环的边界必须相同；  
+    &emsp;&emsp;3. 如果部分循环的边界是常数，部分是变量，则不能合并；  
+    &emsp;&emsp;4. 如果在合并前的所有循环当中，存在多个循环同时读取同一个FIFO缓存，则必须保证FIFO中的数据是按顺序读取的，否则不能合并。
+
+&emsp;&emsp;:two: **循环函数化**
+
+&emsp;&emsp;如果2个循环的边界不同，则不能合并。此时，可将单个循环封装成子函数，从而可以通过子函数之间的并行执行来达到循环并行执行的目的。
+
+!!! example "吃栗子吃到饱 :chestnut:"
+    &emsp;&emsp;假设有程序如下：
+
+    ``` C++
+    void func (int A[N], int B[N], int X[N], int Y[N], int xlimit, int ylimit) {
+        int X_acc = 0, Y_acc = 0;
+
+        SUM_X: for (int i = 0; i < xlimit; i++) {
+            X_acc += A[i];
+            X[i] = X_acc;
+        }
+
+        SUM_Y: for (int i = 0; i < ylimit; i++) {
+            Y_acc += B[i];
+            Y[i] = Y_acc;
+        }
+    }
+    ```
+    
+    &emsp;&emsp;上述程序含有2个分别名为`SUM_X`和`SUM_Y`的循环。这2个循环具有不同的边界，因此不能合并，但可将循环封装成子函数，从而实现并行：
+
+    ``` C++
+    void sub_func(int I[N], int O[N], int limit) {
+    #pragma HLS inline off          // 防止内联
+        int acc = 0;
+
+        SUM: for (int i = 0; i < limit; i++) {
+            acc += I[i];
+            O[i] = acc;
+        }
+    }
+
+    void func (int A[N], int B[N], int X[N], int Y[N], int limit) {
+        sub_func(A, X, xlimit);
+        sub_func(B, Y, ylimit);
+    }
+    ```
+
+    &emsp;&emsp;需要注意的是，子函数`sub_func`必须使用`#pragma HLS inline off`的制导语句来防止内联 —— 子函数`sub_func`内联后，代码将与优化前一致，无法实现2个循环的并行。
+
+&emsp;&emsp;:three: **数据流执行（Dataflow）**
+
+&emsp;&emsp;当2个循环之间存在数据依赖时，不管是循环合并还是将其封装成子函数，都不能改变原有的数据依赖关系，这意味着上述两种方法都不能实现循环之间的并行化。此时，可使用数据流方式实现并行。
+
+&emsp;&emsp;在HLS中，可使用`#pragma HLS dataflow`的制导语句来实现数据流执行方式。
+
+!!! example "吃不完的栗子 :chestnut:"
+    &emsp;&emsp;在下列程序中，`LOOP_1`和`LOOP_2`具有数据依赖关系，可通过HLS Directive实现循环的并行化：
+
+    ``` C++
+    void func (int A[N], int C[N], int num) {
+    #pragma HLS dataflow
+        int acc = 0;
+        int B[N];
+
+        LOOP_1: for (int i = 0; i < N; i++) {
+    #pragma HLS PIPELINE II=1
+            acc += A[i];
+            B[i] = acc;
+        }
+
+        LOOP_2: for (int i = 0; i < N; i++)
+    #pragma HLS PIPELINE II=1
+            C[i] = B[N - 1 - i] * num;
+    }
+    ```
+    注：`#pragma HLS PIPELINE II=1`表示流水线优化，详见4.2.1小节。
+
+&emsp;&emsp;Vivado HLS默认采用非数据流执行方式，即后面的循环必须等待前面的循环整个执行完成才能执行。现在，尝试站在硬件的角度思考。为了便于理解，不妨将上述例子中的`LOOP_1`和`LOOP_2`当作Verilog的2个module。理想情况下，`A[i]`先流入`LOOP_1`，然后`B[i]`计算完成后从`LOOP_1`流出到`LOOP_2`，同时`A[i+1]`流入`LOOP_1`；`LOOP_2`接收到`B[i]`后可立即开始计算`C[i]`；`C[i]`计算完成后流出`LOOP_2`。从数据的视角来看，程序的执行就是数据不断地流入`LOOP_1`，并从`LOOP_2`流出的过程。
+
+&emsp;&emsp;为了实现数据流，HLS工具将在函数（或循环）之间添加缓存。一般地，如果函数（或循环）之间依靠单独的变量传递数据，则HLS会在其中添加FIFO缓存；如果依靠数组传递数据，则添加乒乓缓存。
+
+!!! warning "注意事项 :loudspeaker:"
+    &emsp;&emsp;数据流是一种降低延迟和提高吞吐量的有效方法，但存在如下 **使用限制**：  
+    &emsp;&emsp;1. 数据必须在函数（或循环）之间顺序流动，不能有反馈回路，也不能绕过中间的函数（或循环）向后流动；  
+    &emsp;&emsp;2. 一个函数（或循环）流出的数据，只能流入到另一个函数（或循环），即`single-producer, single-consumer`；  
+    &emsp;&emsp;3. 函数（或循环）不能包含在条件语句当中；  
+    &emsp;&emsp;4. 函数（或循环）不能具有多个出口。
 
 
 ### 4.2 吞吐量优化
 
-&emsp;&emsp;
+&emsp;&emsp;在HLS中，提高吞吐量的基本方法是使用流水线技术。根据流水线粒度的粗细，可将吞吐量优化方法分为循环/函数流水和数据流2种。
 
-&emsp;&emsp;循环展开、流水线、数组划分、内联等是常用的程序优化手段。HLS也可以使用这些方法对所设计的IP核进行优化。此处仅对循环展开和流水线进行简要介绍，更多HLS优化方法详见[Xilinx官网](https://www.xilinx.com/html_docs/xilinx2019_1/sdsoc_doc/hls-pragmas-okr1504034364623.html#fde1504034360078)和理论课PPT《DLA3.HLS设计》。
+#### 4.2.1 循环/函数流水线
 
-### 4.1 循环展开
+&emsp;&emsp;流水线是一种常用的利用时间重叠原理提高处理器性能的并行优化方法，如图1-20所示。示例程序的循环体含有读数据、计算和写数据3个操作。假设使用HLS将该循环体综合成硬件后，循环体中的每个操作都需要一个时钟周期的时延。若循环体需要循环n次，则图1-20(A)所示的串行执行方式总共需要3n个时钟周期，吞吐量为3个周期；而图1-20(B)所示的流水线执行方式只需要n+2个时钟周期，吞吐量为1个周期。
 
-&emsp;&emsp;HLS使用一个硬件模块实现循环体。如果循环语句的循环次数为n，则该硬件模块将被执行n次。假如现在每次循环执行m次循环体，那么完成相同的功能只需要n/m次，这就是循环展开的基本思想。循环展开的本质是牺牲更多的资源来换取加速效果。
+<center><img src="../assets/1-20.png" width = 700></center>
+<center>图1-20 流水线优化示例图</center>
 
-&emsp;&emsp;在HLS中，可以使用`#pragma HLS UNROLL factor=<int>`的制导语句来告诉编译器哪个地方需要做循环展开。其中，参数`factor`用于指示循环体应该被复制多少次。当某个循环被展开了m次后，HLS编译器将生成m个硬件模块并行执行。
+&emsp;&emsp;在HLS中，可使用`#pragma HLS PIPELINE II=<int>`的制导语句来实现流水线优化。其中，参数`II`代表流水线的启动时延/发射时延（Initiation Interval）。默认情况下，`II`取值为1，表示每个时钟周期启动一次流水线。显然，`II`取1时性能最佳。实际上，代码中可能存在数据依赖关系或延迟较大的操作，导致流水线无法实现1个时钟周期的启动时延。因此，在实际生成的电路中，流水线的启动时延可能比参数`II`所设定的值更大。
 
-&emsp;&emsp;假设有以下程序：
-
-``` C++
-for(int i = 0; i < X; i++) 
-    a[i] = b[i] + c[i];  
-```
-
-&emsp;&emsp;对上述循环进行HLS循环展开，得到：
-
-``` C++
-for(int i = 0; i < X; i++)
-{  
-#pragma HLS unroll factor=2  
-    a[i] = b[i] + c[i];  
-}
-```
-
-&emsp;&emsp;上述代码等效于：
-
-``` C++
-for(int i = 0; i < X; i += 2)
-{  
-    a[i] = b[i] + c[i];  
-    if (i+1 >= X) break;  
-    a[i+1] = b[i+1] + c[i+1];  
-}
-```
+&emsp;&emsp;语句`#pragma HLS PIPELINE II=<int>`既可作用于嵌套循环，也可作用于整个函数。若作用于嵌套循环的外层循环，则HLS编译器将对pragma语句之下的所有内层循环进行完全展开。此时，若内层循环的边界为变量，或展开后将耗尽片上资源，则展开失败，从而导致不能满足设定的`II`。类似地，若作用于整个函数，则HLS将对函数内的所有循环进行完全展开，同样存在展开失败的可能。
 
 !!! info "补充说明 :mega:"
-    上述代码中的if语句不会生成对应的电路，此处仅仅是为了保证逻辑的正确性。
+    &emsp;&emsp;当流水线存在数据依赖，或访问存储器（即数组）出现结构冲突时，也会导致不能满足设定的`II`。此时，需要进行相应的优化（如消除依赖关系、使用数组划分等方法解决结构冲突等）。
 
-&emsp;&emsp;对于软件来说，上述代码会比原代码更快，因为减少了指令预测执行的预测失败次数；对于硬件来说，上述代码会生成2个可并行执行的加法器，其性能翻倍，但资源使用也相应增加。
+#### 4.2.2 数据流
 
-&emsp;&emsp;另外，也可简单地使用`#pragma HLS UNROLL`来实现循环的完全展开，即如果循环次数为X，那么HLS编译器将会对循环体展开X次。需要注意的是，当循环次数较大时，完全展开将消耗大量的资源，从而导致展开失败。此时，需要根据芯片的实际资源数量，结合报错信息或综合报告，对展开次数进行合理的调整。
+&emsp;&emsp;数据流优化不仅能降低延迟（见4.1.2小节），还能提高吞吐量。上一小节介绍的循环/函数流水线可以实现细粒度的流水线架构（如运算符级别的流水线），而数据流则可以实现循环级或函数级的粗粒度流水线。
 
-### 4.2 流水线
-
-&emsp;&emsp;流水线是一种常用的利用时间重叠原理提高处理器性能的并行优化方法，如图1-19所示。示例程序的循环体含有读数据、计算和写数据3个操作。假设使用HLS将该循环体综合成硬件后，循环体中的每个操作都需要一个时钟周期的时延。若循环体需要循环n次，则图1-19(A)所示的串行执行方式总共需要3n个时钟周期；而图1-19(B)所示的流水线执行方式只需要n+2个时钟周期。
-
-<center><img src="../assets/1-19.png" width = 700></center>
-<center>图1-19 流水线优化示例图</center>
-
-&emsp;&emsp;在HLS中，可使用`#pragma HLS PIPELINE II=<int>`的制导语句来告诉编译器哪个地方需要用流水线架构来优化。其中，参数`II`代表流水线的启动时延/发射时延（Initiation Interval）。默认情况下，参数`II`取值为1，表示每个时钟周期启动一次流水线。显然，当`II`取值为1时性能最佳。实际上，代码中可能存在数据依赖关系或延迟较大的操作，导致流水线无法实现1个时钟周期的启动时延。
-因此，在实际生成的电路中，流水线的启动时延可能比参数`II`所设定的值更大。
 
 ### 4.3 优化调试
 
@@ -416,28 +579,28 @@ for(int i = 0; i < X; i += 2)
 
 &emsp;&emsp;插入制导语句不会影响代码的功能，因此优化前后CSim的仿真结果应当维持不变。若优化前，设计已经通过了CSim，则优化后可直接进行综合。
 
-&emsp;&emsp;综合结束后，一种情况是HLS会在下方的控制台中输出报错信息，如图1-20所示。
+&emsp;&emsp;综合结束后，一种情况是HLS会在下方的控制台中输出报错信息，如图1-21所示。
 
-<center><img src="../assets/1-20.png"></center>
-<center>图1-20 优化后综合报错</center>
+<center><img src="../assets/1-21.png"></center>
+<center>图1-21 优化后综合报错</center>
 
 &emsp;&emsp;此时说明所添加的制导语句不能被实现，需要删除之。例如进行了不合理的循环展开，而芯片资源无法满足展开，进而报错。
 
-&emsp;&emsp;第二种情况是HLS根据制导语句执行了优化操作，但优化效果无法达到预期。此时，HLS将在综合报告中以红色字体报警，如图1-21所示。
+&emsp;&emsp;第二种情况是HLS根据制导语句执行了优化操作，但优化效果无法达到预期。此时，HLS将在综合报告中以红色字体报警，如图1-22所示。
 
-<center><img src="../assets/1-21.png" width = 700></center>
-<center>图1-21 综合报告报警</center>
+<center><img src="../assets/1-22.png" width = 700></center>
+<center>图1-22 综合报告报警</center>
 
 &emsp;&emsp;此时说明制导语句的优化参数设置不合理，需要进行调整，比如降低循环展开`factor`、增加流水线`II`或者对代码进行合理的分割及其他优化。
 
 !!! info "补充说明 :mega:"
-    &emsp;&emsp;对于图1-21中的Timing报警，可以通过HLS的分析功能找到时序违例，如图1-22所示。
+    &emsp;&emsp;对于图1-22中的Timing报警，可以通过HLS的分析功能找到时序违例，如图1-23所示。
 
-    <center><img src="../assets/1-22.png" width = 650></center>
-    <center>图1-22 查看时序违例</center>
+    <center><img src="../assets/1-23.png" width = 650></center>
+    <center>图1-23 查看时序违例</center>
 
-    &emsp;&emsp;按照图1-22找到违例所对应的代码，通过分析，采取合理的优化措施。若是以优化性能为首要目标，则需要考虑如何分割计算任务，以减小时延，从而消除违例；若是以保证正确性为首要目标，则需要降低相应的优化期望和优化目标。
+    &emsp;&emsp;按照图1-23找到违例所对应的代码，通过分析，采取合理的优化措施。若是以优化性能为首要目标，则需要考虑如何分割计算任务，以减小时延，从而消除违例；若是以保证正确性为首要目标，则需要降低相应的优化期望和优化目标。
 
-    &emsp;&emsp;一般地，需要修正所有的违例，但有时存在这样的情况：综合报告中没有任何报警，但图1-22所示的Analysis视图中仍然有违例。此时可暂时忽略这些违例，继续进行后续的开发，直到违例导致了错误结果的产生。
+    &emsp;&emsp;一般地，需要修正所有的违例，但有时存在这样的情况：综合报告中没有任何报警，但图1-23所示的Analysis视图中仍然有违例。此时可暂时忽略这些违例，继续进行后续的开发，直到违例导致了错误结果的产生。
 
 &emsp;&emsp;第三种情况是，虽然插入了制导语句，但从综合报告来看，优化前后没有任何效果。此时说明所作优化不合理，因而被HLS编译器忽略。该情形下，需要重新分析代码，在必要的地方插入优化语句。
