@@ -826,6 +826,11 @@
 <p>&emsp;&emsp;实验包的<code>systolic_array.cpp</code>包含有 <strong>2个版本</strong> 的脉动阵列，<strong>一个是<code>Size-Limited version</code>，另一个则是<code>Size-Free version</code></strong>。前者最大只能支持2个<script type="math/tex">180 \times 180</script>矩阵的相乘，后者则通过矩阵分块实现了任意大小矩阵的相乘。</p>
 <p>&emsp;&emsp;实验时，应当尽可能完成<code>Size-Free version</code>的脉动阵列。如果只完成了<code>Size-Limited version</code>，则仅能得到基础的一小部分分数。</p>
 </div>
+<div class="admonition info">
+<p class="admonition-title">友情提醒 <img alt="😉" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f609.svg" title=":wink:" /></p>
+<p>&emsp;&emsp;在<code>systolic_array.cpp</code>中，函数<code>gemm_kernel</code>仅实现了通用矩阵乘法。<strong>为了支持卷积操作，需要在输出结果（即<code>copy_result</code>函数）时，为乘法结果加上偏置（bias）。</strong></p>
+<p>&emsp;&emsp;请同学们在理解脉动阵列实现卷积的原理的基础上，结合<a href="https://hitsz-cslab.gitee.io/dla/lab2/theory/#23-tiny-yolov2">实验2-实验原理-2.3 Tiny YOLOv2算法和网络模型</a>中的三维卷积伪代码，自行实现<code>copy_result</code>函数。</p>
+</div>
 <p>&emsp;&emsp;代码编写完成后，参考<a href="https://hitsz-cslab.gitee.io/dla/lab1/step/#1-hlsip">实验1-实验步骤-1.利用HLS生成IP核</a>，对脉动阵列进行CSim仿真。确认代码功能正确后，进行综合、导出RTL，最终得到脉动阵列IP核。</p>
 <h2 id="2-overlay">2. 构建Overlay</h2>
 <p>&emsp;&emsp;参考<a href="https://hitsz-cslab.gitee.io/dla/lab1/step/#2-block-design">实验1-实验步骤-2.创建Block Design</a>，利用自己生成的脉动阵列IP核，以及实验包的池化IP核，自行搭建Block Design、生成比特流，并导出Overlay。</p>

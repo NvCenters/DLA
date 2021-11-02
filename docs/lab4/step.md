@@ -11,6 +11,11 @@
 
     &emsp;&emsp;实验时，应当尽可能完成`Size-Free version`的脉动阵列。如果只完成了`Size-Limited version`，则仅能得到基础的一小部分分数。
 
+!!! info "友情提醒 :wink:"
+    &emsp;&emsp;在`systolic_array.cpp`中，函数`gemm_kernel`仅实现了通用矩阵乘法。**为了支持卷积操作，需要在输出结果（即`copy_result`函数）时，为乘法结果加上偏置（bias）。**
+
+    &emsp;&emsp;请同学们在理解脉动阵列实现卷积的原理的基础上，结合[实验2-实验原理-2.3 Tiny YOLOv2算法和网络模型](https://hitsz-cslab.gitee.io/dla/lab2/theory/#23-tiny-yolov2)中的三维卷积伪代码，自行实现`copy_result`函数。
+
 &emsp;&emsp;代码编写完成后，参考[实验1-实验步骤-1.利用HLS生成IP核](https://hitsz-cslab.gitee.io/dla/lab1/step/#1-hlsip)，对脉动阵列进行CSim仿真。确认代码功能正确后，进行综合、导出RTL，最终得到脉动阵列IP核。
 
 ## 2. 构建Overlay
