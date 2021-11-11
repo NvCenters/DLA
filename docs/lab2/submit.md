@@ -2,9 +2,9 @@
 
 ## 必做题：
 
-&emsp;&emsp;检查量化YOLO的实验现象并回答问题（2分）；
+&emsp;&emsp;检查量化YOLO的实验现象（2分）；
 
-&emsp;&emsp;检查HLS优化的实验现象并回答问题（2分）；
+&emsp;&emsp;检查HLS优化的实验现象（2分）；
 
 &emsp;&emsp;将源码、运行结果截图及报告打包成.zip，以“<font color = orange>**学号_姓名_DLA实验2.zip**</font>”命名并提交（4分）。
 

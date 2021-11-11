@@ -4,9 +4,9 @@
 
 &emsp;&emsp;检查Block Design电路图（2分）；
 
-&emsp;&emsp;检查实验现象并回答问题（4分）；
+&emsp;&emsp;检查下板运行的实验现象（3分）；
 
-&emsp;&emsp;将源码、运行结果截图及报告打包成.zip，以“<font color = orange>**学号_姓名_DLA实验3.zip**</font>”命名并提交（6分）。
+&emsp;&emsp;将源码、运行结果截图及报告打包成.zip，以“<font color = orange>**学号_姓名_DLA实验3.zip**</font>”命名并提交（7分）。
 
 ## 附加题：
 
