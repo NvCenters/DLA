@@ -2,6 +2,7 @@
 
 ![](https://api.travis-ci.org/Bohan-hu/HITSZ-COMP2008-Course.svg?branch=master)
 
+- 声明：本课程资料仅限于哈尔滨工业大学（深圳）《深度学习体系结构》（2021秋）课程使用，严禁扩散或用作其他用途。
 
 - 课程主页及指导书地址：[https://hitsz-cslab.gitee.io/dla/](https://hitsz-cslab.gitee.io/dla/)
 
