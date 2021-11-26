@@ -17,7 +17,7 @@
 
 ## 1. 参考资料及实验包下载
 
-&emsp;&emsp;[点击下载参考资料和实验包](https://gitee.com/hitsz-cslab/dla/tree/2021/stupkt)
+&emsp;&emsp;[点击下载参考资料和实验包](https://gitee.com/hitsz-cslab/dla/tree/master/stupkt)
 
 ## 2. 作业提交方式
 
