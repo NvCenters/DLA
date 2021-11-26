@@ -110,7 +110,7 @@
 
 &emsp;&emsp;Directive设置完毕，接下来需要对C代码进行综合，以生成RTL电路。
 
-&emsp;&emsp;点击Project->Project Settings->Synthesis，点击Top Function右边的Browse，选择matrixmul作为Top Function，点击“OK”按钮，如图2-15所示。
+&emsp;&emsp;点击Project->Project Settings->Synthesis，点击Top Function右边的Browse，选择`conv_core`作为Top Function，点击“OK”按钮，如图2-15所示。
 
 <center><img src="../assets/2-15.png" width = 550></center>
 <center>图2-15 选择Top Function</center>
