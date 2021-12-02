@@ -35,7 +35,7 @@
 <center><img src="../assets/2-4.png" width = 650></center>
 <center>图2-4 导入第5层输入特征图和卷积层权值</center>
 
-&emsp;&emsp;请参照1.3.3节的量化方法，编写Tiny YOLOv2第5层和第9层的输入特征图和网络权值的量化代码，如图2-5所示。
+&emsp;&emsp;请参照[实验原理-3.2量化方法简介](https://hitsz-cslab.gitee.io/dla/lab2/theory/#32)的量化方法，编写Tiny YOLOv2第5层和第9层的输入特征图和网络权值的量化代码，如图2-5所示。
 
 <center><img src="../assets/2-5.png" width = 450></center>
 <center>图2-5 补全第5层的量化代码</center>
