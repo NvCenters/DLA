@@ -1,14 +1,28 @@
 # 验收与提交
 
-## 必做题：
+# 实验报告要求
 
-&emsp;&emsp;检查Block Design电路图（2分）；
+&emsp;&emsp;实验报告需包含以下内容：
 
-&emsp;&emsp;检查下板运行的实验现象（3分）；
+&emsp;&emsp;（1）题目分析；
+
+&emsp;&emsp;（2）加速器设计思路；
+
+&emsp;&emsp;（3）关键实现（可用图表描述）；
+
+&emsp;&emsp;（4）测试结果及分析。
+
+## 验收与提交要求
+
+- 必做题：
+
+&emsp;&emsp;检查Block Design电路图（1.5分）；
+
+&emsp;&emsp;检查下板运行的实验现象（3.5分）；
 
 &emsp;&emsp;将源码、运行结果截图及报告打包成.zip，以“<font color = orange>**学号_姓名_DLA实验3.zip**</font>”命名并提交（7分）。
 
-## 附加题：
+- 附加题：
 
 &emsp;&emsp;检查实验现象，打包提交源码、运行结果截图及文字分析（<font color=green>**+1.5~3.5**</font>分）。
 
